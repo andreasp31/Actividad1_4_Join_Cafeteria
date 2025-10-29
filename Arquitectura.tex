@@ -1,0 +1,214 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{xcolor}
+\geometry{margin=2.5cm}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    frame=single,
+    breaklines=true,
+    commentstyle=\color{green},
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    showstringspaces=false,
+    language=Java
+}
+
+\title{Documentación de Práctica Cafetería}
+\author{Andrea Sofía Pais Dos Santos}
+\date{\today}
+
+\begin{document}
+\setlength{\droptitle}{0.4\textheight} 
+\maketitle
+\thispagestyle{empty}
+\newpage 
+
+
+\vspace{5cm}
+Índice
+
+\begin{enumerate}
+    \item Descripción del problema .......................................... página 3
+    \item Requisitos funcionales ............................................... página 3
+    \item Requisitos no funcionales .......................................... página 3
+    \item Casos de uso ............................................................. página 3
+    \item Historias de usuario .................................................. página 4
+    \item Tecnologías Utilizadas .............................................. página 4
+    \item Clases e Interfaz ....................................................... página 5
+\end{enumerate}
+\newpage
+
+
+\section{Descripción del problema}
+Tenemos una cafetería que necesita organizar a los camareros y se repartan los clientes de la forma más óptima posible. Para ello creamos 
+un programa que gestione la entrada de clientes y los reparta correctamente a los distintos camareros. Luego crear una pequeña aplicación
+que refleje el funcionamiento del programa, tiene que ser capaz de:
+\begin{enumerate}
+\item Al ejecutar el programa deben llegar los clientes a la cafetería.
+\item Esos clientes por orden de llegada, son atendidos por el camarero que esté disponible.
+\item Si el camarero atiende al cliente dentro del tiempo de espera del cliente, el mismo se va contento de la cafetería. Si al camarero no le ha dado tiempo de entregar el café en el tiempo de espera, el cliente se marcha insatisfecho.
+\item Al atender todos los clientes se acaba el programa.
+\end{enumerate}
+
+\section{Requisitos funcionales}
+Los requisitos funcionales que va a tener el sistema son:
+
+RF01: Cada cliente debe esperar su café durante el tiempo especificado.
+
+RF02: Los cilentes deben poder irse si se acaba el tiempo de espera puesto.
+
+RF03: Los camareros deben atender clientes en orden de llegada y deben de continuar trabajando si un cliente se va.
+
+RF04: Gestionar pedidos concurrentemente.
+
+RF05: Mostrar estado de clientes y camareros.
+
+\section{Requisitos no funcionales}
+Los requisitos no funcionales que va a tener el sistema son:
+
+RNF01: Mensajes informativos y comprensibles.
+
+RNF02: En cada ejecución el proceso debe ser distinto.
+
+RNF03: Los hilos deben finalizar correctamente.
+
+RNF04: Interfaz intuitiva y fácil de usar.
+
+\section{Casos de uso}
+Descripción de casos de uso principales de la aplicación:
+
+\begin{tabular}{|l|p{10cm}|}
+    \hline
+    Caso de Uso & Descripción \\ \hline
+    Llegada de Cliente & El cliente llega y espera su café en un tiempo límite. Si se agota el cliente se va sino recibe su pedido. \\ \hline
+    Preparar café & El cammarero atiende pedidos en orden de llegada, el cliente se va y continúa con el siguiente. \\ \hline
+    Gestionar Clientes & El usuario puede eliminar la receta o modificar cualquier de sus puntos cuando desee. \\ \hline
+\end{tabular}
+
+\section{Historias de usuario}
+\begin{tabular}{|l|p{2cm}|p{5cm}|p{5cm}|}
+    \hline
+    Identificación & Nombre & Tarea & Objetivo\\ \hline
+    HU1 & Cliente & El cliente llega a la cafetería, pide un café y tiene un tiempo de espera & Pedir un café y esperar por el \\ \hline
+    HU3 & Cliente & El cliente tiene que esperar (tiempo de espera) y si no tiene el café en ese tiempo se marcha  & Ser atendido \\ \hline
+    HU4 & Camareros & Gestionar los clientes que van a llegar & Atender pedidos\\ \hline
+    HU5 & Camareros & Cada camarero tiene que comprobar que el cliente no está siendo atendido por otro camarero antes de atenderlo, si fue atendido pues pasar al siguiente & Atender a clientes que no son atendidos \\ \hline
+   
+\end{tabular}
+
+\vspace{1cm}
+
+\section{Tecnologías Utilizadas}
+
+\begin{tabular}{l|p{8cm}|cm{2cm}}
+    Por terminal & Usamos java en IntelliJ para crear el programa y que funcione por terminal & \includegraphics[height=2cm]{images/Java_Logo.png} \\
+    Interfaz & Para la interfaz usamos JavaFX en IntelliJ para enseñar el programa de una forma más visual & \includegraphics[height=2cm]{images/JavaFX_Logo.png}\\
+    IDE & IDE que se usó para realizar ambas partes & \includegraphics[height=2cm]{images/logoIntellij.png}\\
+
+\end{tabular}
+
+\vspace{3cm}
+\section{Clases e Interfaces}
+Explicación breve de cada clase y interfaz y las herramientas necesarias para llevar a cabo la aplicación. La "base de datos" no existe, los datos están añadidos manualmente, por un lado los camareros y los clientes.
+
+\subsection{Interfaz gráfica con JavaFX}
+
+\subsubsection{HelloController}
+\begin{itemize}
+\item Declaramos variables:
+    \begin{enumerate}
+        \item TextArea -> para el contenido principal de todo el flujo del ejericicio.
+        \item BotonEmpezar -> al darle inicia la simulación y llama a la función "iniciar()".
+        \item CamarerosArea -> espacio que va a guardar la información de los camareros, enseñando una lista.
+        \item ClientesArea -> espacio que va a guardar la información de los clientes, enseñando una lista de clientes contentos y cuales no.
+        \item Lista Camareros y Lista Clientes -> son los que se van a enseñar en las pantallas de la derecha de la interfaz, datos de los camareros y los clientes.
+    \end{enumerate}
+\item Función al ejecutar el ejercicio, nos aparece un mensaje de darle a un botón para inicializar y no nos deja editar los elementos.
+\item Función "iniciar()" que funciona al pulsar en el botón "BotonEmpezar" y dentro de la función tenemos:
+    \begin{enumerate}
+        \item La lista de datos de los camareros y la de los clientes.
+        \item llamamos a las funciones de las listas de los clients y camareros para enseñarlas en las pantallas de la derecha.
+        \item Iniciamos los camareros y con un new Thread con los clientes entrando por tiempos a la cafetería y esperamos a que acaben. Eso todo lo ejecutamos ".start()".
+    \end{enumerate}
+\item Funciones para actualizar el estado de los clientes y los camareros obteniendo los datos de las clases. 
+\item Funciones para listar los clientes y camareros, que nos los lista en las ventanas de la derecha de la interfaz.
+\end{itemize}
+
+Para verlo mejor, una captura de la pantalla principal de la interfaz.
+
+\vspace{1cm}
+\includegraphics[height=8cm]{images/Interfaz.png}
+\vspace{1cm}
+
+\subsection{Clases en Java}
+Tenemos las mismas clases que en la otra parte del ejercicio pero hay que añadirle unas cosas para que los datos se impriman en la interfaz.
+
+\subsubsection{Clase Camarero}
+\begin{itemize}
+\item Modelo de datos con propiedades: id, nombre, ingredientes, instrucciones
+\item Atributos:
+    \begin{enumerate}
+        \item nombre -> nombre del camarero.
+        \item ocupado -> buleano que se pone en "false" al entregar el café y empieza en "null".
+    \end{enumerate}
+\item Constructor de la clase con los atributos.
+\item Función "prepararCafe()" que pasandole los clientes por parámetro y con un try catch gestiona:
+    \begin{enumerate}
+        \item Los camareros a que cliente está preparando el café
+        \item El tiempo aleatorio que tarda el camarero a preparar el café.
+        \item Esto lo pasa a la clase Cliente y marca el buleano "CafeEntregado" como "true".
+    \end{enumerate}
+\item Función run que se ejecuta en el main con .start() y nos dice que los camareros están listo para atender.
+\item Getters y setters de todos los atributos. 
+\item La clase Camarero tiene la misma estructura y mismos atributos que la realizada en el ejercicio de Java por terminal, lo único nuevo es un atributo HelloController controller que va a pasar los datos que necesitamos al HelloController.
+\item Y en vez que imprimirlo con un "sout" lo pasamos por un (controller."funcionParaPasarDatos"), esos datos se pasan y los enseña en los textArea.
+\item Los getters,setters y la función "run()" se mantienen igual.
+\end{itemize}
+
+\subsubsection{Clase Cliente}
+\begin{itemize}
+\item Atributos:
+    \begin{enumerate}
+        \item nombre -> nombre del cliente.
+        \item tiempoEspera -> cantidad de tiempo que está dispuesto a esperar el cliente a ser atentido.
+        \item Lista Camareros -> lista de los camareros para ver cual está ocupado o no.
+        \item cafeEntregado -> buleano que se pone en true al entregar el café
+    \end{enumerate}
+\item Constructor de la clase con los atributos.
+\item Función run que se ejecuta en el main con .start(), que contiene un try catch en el encontramos:
+    \begin{enumerate}
+        \item Los clientes van llegan a la cafetería
+        \item Creamos una variable "ocupado" que inicia siendo "null" porque ninguno de los camareros está ocupado al principio.
+        \item Recorriendo la lista de camareros buscamos un camarero libre y lo marcamos como ocupado. Y si está libre, llamamos la función "prepararCafé()" que se encuentra en la Clase camarero.
+        \item Luego para ver si sigue estando en el tiempo de espera del cliente, busqué como calcular el tiempo desde que se inicia con "currentTimeMillis()" y se lo restamos al tiempo de inicio si es mayor que el tiempo de espera, el cliente se va, sino el cliente ha recibido el café y se ha ido.
+    \end{enumerate}
+\item Getters y setters de todos los atributos. 
+\item La clase Cliente tienen los mismos atributos y la misma estructura que la realizada en el ejercicio de Java anterior, lo nuevo es un atributo HelloController controller que va a pasar los datos que necesitamos de los clientes al HelloController.
+\item Y en vez que imprimirlo con un "sout" lo pasamos por un (controller."funcionParaPasarDatos"), esos datos se pasan y los enseña en los textArea.
+\item Los getters, setters y la función "run()" se mantienen igual.
+\end{itemize}
+
+\subsubsection{Hello View (xml)}
+Todos los elementos visuales con los ides y las acciones vinculadas para que se ejecute todo correctamente en la interfaz.
+\begin{itemize}
+\item Tenemos un AnchorPane que envuelve a todos los elementos y es el que se conecta al controller HelloController.
+\item Hay dos fondos que se paran las pantallas, por un lado la ejecución y por otro los datos de Cliente y Camarero.
+\item Un TextArea con el fx:id="texto".
+\item El botón empezar que inicializar el simulador.
+\item Dos TextArea que nos enseñan los datos de los clientes y los camareros.
+\item Tenemos una leyenda que nos indica que representa cada icono.
+\item A parte hay un archivo "style.css" que tiene el estilo del botón, los fondos, etc.
+\end{itemize}
+
+\end{document}

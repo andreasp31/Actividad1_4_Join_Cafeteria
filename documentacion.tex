@@ -1,0 +1,385 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{xcolor}
+\geometry{margin=2.5cm}
+
+\lstdefinestyle{javascript}{
+    language=Java,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=2,
+    upquote=true,
+    columns=fixed,
+    basewidth=0.5em
+}
+
+\title{Documentación de Práctica Cafetería más Barista}
+\author{Andrea Sofía Pais Dos Santos}
+\date{\today}
+
+\begin{document}
+\setlength{\droptitle}{0.4\textheight} 
+\maketitle
+\thispagestyle{empty}
+\newpage 
+
+
+\vspace{5cm}
+Índice
+
+\begin{enumerate}
+    \item Descripción del problema .......................................... página 3
+    \item Requisitos funcionales ............................................... página 3
+    \item Requisitos no funcionales .......................................... página 3
+    \item Casos de uso ............................................................. página 4
+    \item Historias de usuario .................................................. página 4
+    \item Tecnologías Utilizadas .............................................. página 4
+    \item Patrones de código utilizados ................................... página 5
+    \item Clases e Interfaz ....................................................... página 5
+\end{enumerate}
+\newpage
+
+
+\section{Descripción del problema}
+Tenemos una cafetería que necesita organizar a los camareros y se repartan los clientes de la forma más óptima posible. Para ello creamos 
+un programa que gestione la entrada de clientes de forma manual y los reparta correctamente a los distintos camareros. Después los camareros al tomar nota de los pedidos,
+se lo pasa al barista que se va a encargar de producir los cafés y el camarero de repartirlos a los clientes. Luego crear una pequeña aplicación
+que refleje el funcionamiento del programa, tiene que ser capaz de:
+\begin{enumerate}
+\item Al ejecutar el programa deben estar los camareros y el barista listos empezando a producir cafés y poder manualmente añadir los clientes para que entren cuando yo quiera.
+\item Esos clientes por orden de llegada, son atendidos por el camarero que esté disponible.
+\item Si el camarero atiende al cliente dentro del tiempo de espera del cliente, el mismo se va contento de la cafetería. Si al camarero no le ha dado tiempo de entregar el café en el tiempo de espera, el cliente se marcha insatisfecho.
+\item Y la posibilidad de cerrar la cafetería cuando me apetezca.
+\end{enumerate}
+
+\vspace{1cm}
+\section{Requisitos funcionales}
+Los requisitos funcionales que va a tener el sistema son:
+
+RF01: Cada cliente debe esperar su café durante el tiempo especificado.
+
+RF02: Los clientes deben poder irse si se acaba el tiempo de espera puesto.
+
+RF03: Los camareros deben atender clientes en orden de llegada y deben de continuar trabajando si un cliente se va.
+
+RF04: Gestionar pedidos concurrentemente.
+
+RF05: El barista crea constantemente cafés y los añade a una cola, y el camarero cuando tenga pedidos, retira de la cola los cafés uno a uno que necesite.
+
+RF06: Mostrar estado de clientes, camareros, el barista y el buffer.
+
+\vspace{1cm}
+\section{Requisitos no funcionales}
+Los requisitos no funcionales que va a tener el sistema son:
+
+RNF01: Mensajes informativos, comprensibles y actualizados.
+
+RNF02: En cada ejecución el proceso debe ser distinto, menos el barista .
+
+RNF03: Los hilos deben finalizar correctamente.
+
+RNF04: Interfaz intuitiva y fácil de usar.
+
+\vspace{2cm}
+\section{Casos de uso}
+Descripción de casos de uso principales de la aplicación:
+
+\begin{tabular}{|l|p{10cm}|}
+    \hline
+    Caso de Uso & Descripción \\ \hline
+    Llegada de Cliente & El cliente llega y espera su café en un tiempo límite. Si se agota el cliente se va sino recibe su pedido. \\ \hline
+    Preparar Café & El camarero atiende pedidos en orden de llegada, el camarero recoge un café de la cola de cafés preparados por el barista. \\ \hline
+    Gestionar Cafés & El café está hecho por el barista que se añade a una cola, si cuando el camarero recoge el café y no hay cafés, el cliente se va a ir insatisfecho. \\ \hline
+\end{tabular}
+
+\vspace{1cm}
+\section{Historias de usuario}
+\begin{tabular}{|l|p{2cm}|p{5cm}|p{5cm}|}
+    \hline
+    Identificación & Nombre & Tarea & Objetivo\\ \hline
+    HU1 & Cliente & El cliente llega a la cafetería, pide un café y tiene un tiempo de espera & Pedir un café y esperar por el \\ \hline
+    HU3 & Cliente & El cliente tiene que esperar (tiempo de espera) y si no tiene el café en ese tiempo se marcha  & Ser atendido \\ \hline
+    HU4 & Camareros & Gestionar los clientes que van a llegar & Atender pedidos\\ \hline
+    HU5 & Camareros & Cada camarero tiene que comprobar que el cliente no está siendo atendido por otro camarero antes de atenderlo, si fue atendido pues pasar al siguiente & Atender a clientes que no son atendidos \\ \hline
+   
+\end{tabular}
+
+\vspace{1cm}
+
+\section{Tecnologías Utilizadas}
+
+\begin{tabular}{l|p{8cm}|cm{2cm}}
+    Interfaz & Para la interfaz usamos JavaFX en IntelliJ para enseñar el programa de una forma más visual & \includegraphics[height=2cm]{images/JavaFX_Logo.png}\\
+    IDE & IDE que se usó para realizar la lógica en Java & \includegraphics[height=2cm]{images/logoIntellij.png}\\
+\end{tabular}
+
+\vspace{2cm}
+\section{Patrones de código utilizados}
+En esta práctica se utilizaron los dos siguientes patrones de código que facilitaron la organización y el flujo de información.
+
+
+\subsection{Patrón Productor - Consumidor}
+
+Es un patrón de diseño concurrente que sirve para distribuir trabajo en diferentes hilos donde los datos son pasados 
+de una clase Productor a un (Buffer) que va a almacenar esos datos. Y pasa a otro hilo que es el Consumidor, que recolecta
+esa información cuando le interese y cuando pueda.
+
+\subsection{Patrón Vista - Controlador}
+
+Es un patrón de diseño que sepera una aplicación en partes: una parte se encarga de conectar los datos y la lógica con la parte de la interfaz. Donde pasamos la información a través de un controlador.
+
+
+\vspace{1cm}
+\section{Clases e Interfaces}
+Explicación breve de cada clase y interfaz y las herramientas necesarias para llevar a cabo la aplicación. La "base de datos" no existe, los datos están añadidos manualmente, por un lado los camareros y los clientes.
+
+\subsection{HelloController}
+\begin{itemize}
+\item Declaramos variables:
+    \begin{enumerate}
+        \item TextArea -> para el contenido principal de todo el flujo del ejericicio.
+        \item BotonEmpezar -> al darle inicia la simulación y llama a la función "iniciar()".
+        \item CamarerosArea -> espacio que va a guardar la información de los camareros, enseñando una lista.
+        \item ClientesArea -> espacio que va a guardar la información de los clientes, enseñando una lista de clientes contentos y cuales no.
+        \item BaristaArea y BufferArea -> Nos va mostrar la información de como está produciendo los cafés el barista y como está la cola de los cafés.
+        \item Lista Camareros y Lista Clientes -> son los que se van a enseñar en las pantallas de la derecha de la interfaz, datos de los camareros y los clientes.
+    \end{enumerate}
+\item Función al ejecutar el ejercicio, nos aparece un mensaje de darle a un botón para inicializar y no nos deja editar los elementos.
+\item Función "iniciar()" que funciona al pulsar en el botón "BotonEmpezar" y dentro de la función tenemos:
+    \begin{enumerate}
+        \item La lista de datos de los camareros y la de los clientes.
+        \item llamamos a las funciones de las listas de los clientes y camareros para enseñarlas en las pantallas de la derecha.
+        \item Iniciamos los camareros, barista, cola y con un new Thread, y con un botón manual para añadir los clientes entrando por tiempos a la cafetería y esperamos a que acaben. Eso todo lo ejecutamos ".start()".
+    \end{enumerate}
+\item Funciones para actualizar el estado de los clientes,los camareros, barista y el buffer obteniendo los datos de las clases. 
+\item Funciones para listar los clientes y camareros, que nos los lista en las ventanas de la derecha de la interfaz.
+\item Función para ir actualizando el estado del buffer a través de los cafés esperando a ser servidos y los cafés ya servidos.
+\end{itemize}
+
+\subsection{Clases en Java}
+Al ejericio anterior le tenemos que añadir 2 clases más y modificar la clase Camarero. Vamos a crear la clase Barista que va a equivaler al "Productor" que va a producir los cafés en este caso, una clase "Cola" que es en la que vamos a añadir los cafés que se están haciendo y quitando los mismos cuando el camarero los necesite. En la clase Camarero haremos que en vez de "servilo" el camarero, lo recoga de la cola y lo sirva.
+
+\subsubsection{Clase Barista}
+Lo que creamos es lo siguiente: 
+
+\begin{lstlisting}[style=javascript]
+public class Barista extends Thread{
+    private Cola cola;
+    private HelloController controller;
+
+    public Barista(Cola cola,HelloController controller) {
+        this.cola = cola;
+        this.controller = controller;
+    }
+
+    public void run(){
+        controller.agregarMensaje("Barista inicio su turno");
+        try{
+            //Crea 40 cafes como maximo por jornada
+            for(int i=1;i<40; i++){
+                //Meter los cafes hechos a la cola
+                cola.put();
+                Thread.sleep(3000);
+            }
+            controller.agregarMensaje("Barista ha terminado su turno");
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
+    }
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item El barista es un hilo y tiene como atributos la cola y el controller para pasarle información a la interfaz.
+    \item Constructor de la clase con los atributos.
+    \item Función "run()" que se encarga de arrancar la jornada del barista, puede crear 40 cafés en total y los va añadiendo cada poco tiempo a la cola.
+    \item A la interfaz la información que le pasa es que el barista inicia su jornada y cuando la acaba.
+\end{itemize}
+
+\vspace{1cm}
+\subsubsection{Clase Cola}
+Lo que creamos es:
+
+\begin{lstlisting}[style=javascript]
+public class Cola {
+    private int cafes;
+    private int capacidadMaxima = 40;
+    private HelloController controller;
+    private int preparadosTotal = 0;
+    private int servidosTotal = 0;
+
+    public Cola(int cafes, HelloController controller) {
+        this.cafes = cafes;
+        this.controller = controller;
+    }
+
+    public synchronized void put(){
+        try {
+            //Si la cantidad de cafes es igual o menos que la cantidad maxima 
+            //pues el barista tiene que esperar que el camarero recoga cafes
+            while (cafes >= capacidadMaxima) {
+                agregarMensaje("El barista espera - Buffer lleno: " + cafes + "/" +  capacidadMaxima );
+                wait();
+            }
+            //Si puede meter mas cafes los hace y nos suma cuantos tiene en total y
+            //notificamos a todos
+            Thread.sleep(500);
+            cafes++;
+            preparadosTotal++;
+            agregarMensaje("Barista prepara cafe, " + "lleva: " + cafes);
+            agregarMensaje("Total preparados: " + preparadosTotal);
+            controller.actualizarBuffer();
+            notifyAll();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void get(String camareroNombre){
+        try {
+            //Si la cantidad de cafes es 0, el camarero tiene que esperar al que el 
+            //barista meta cafe
+            while (cafes == 0) {
+                agregarMensaje(camareroNombre + "espera - Buffer vacio");
+                wait();
+            }
+            //Si puede retirar lo retira y nos lo meta a cafes servidos
+            Thread.sleep(300);
+            cafes--;
+            servidosTotal++;
+            agregarMensajeCamarero("Cafe esta siendo recogido por el camarero");
+            agregarMensaje(camareroNombre +  " recogio un cafe");
+            controller.actualizarBuffer();
+            notifyAll();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Para pasar los mensajes a un textArea despues
+    public void agregarMensaje(String mensaje){
+        Platform.runLater(() -> {
+            controller.agregarMensaje(mensaje);
+        });
+    }
+    //Para pasar los mensajes a otro textArea
+    public void agregarMensajeCamarero(String mensaje){
+        Platform.runLater(() -> {
+            controller.agregarLog(mensaje);
+        });
+    }
+
+    public synchronized int totalPreparados(){
+        return preparadosTotal;
+    }
+
+    public synchronized int totalServidos(){
+        return servidosTotal;
+    }
+
+    public synchronized int cafes(){
+        return cafes;
+    }
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item La Cola va a tener como atributos: el número de cafés, capacidadMaxima, el controlador para pasar la información, cafés preparados y cafés servidos.
+    \item Constructor de la clase con los atributos.
+    \item Función "put()" que mientras los cafés sean mayor o igual que la capacidad máxima del buffer el barista espere, sino añadimos un café y mandamos la información que el Barista ha hecho el café y está listo para recogerlo y lo notificamos a todos.
+    \item Función "get()" que mientras en la cola haya 0 cafés el camarero tenga que esperar y sino pues el camarero retira un café para entregárselo al consumidor, lo notificamos y mandamos la información que nos interese enseñar an la interfaz.
+    \item Funciones de "agregarMensaje()" y "agregarMensajeCamarero()" que sirven para mandar la intormación a través del controlador.
+    \item Tenemos otras 2 funciones que las usamos para devolver el total del cafés preparados y el total servidos para ir actualizando la información en la interfaz.
+\end{itemize}
+
+
+\subsubsection{Clase Camarero}
+
+Lo único que vamos a implementar en la clase camarero es un atributo Cola que va a permitir recoger los cafés de la cola para servirlos.
+\begin{itemize}
+\item Modelo de datos con propiedades: nombre, estado, controlador para pasar la información y cola.
+\item Atributos:
+    \begin{enumerate}
+        \item nombre -> nombre del camarero.
+        \item ocupado -> buleano que se pone en "false" al entregar el café y empieza en "null".
+        \item controller -> para pasar la información que queremos monstrar a la interfaz.
+        \item cola -> nos permite acceder a la clase cola para recoger los cafés que va produciendo el barista.
+    \end{enumerate}
+\item Constructor de la clase con los atributos.
+\item Función "prepararCafe()" que pasandole los clientes por parámetro y con un try catch gestiona:
+    \begin{enumerate}
+        \item Los camareros a que cliente está preparando el café
+        \item Aquí cogemos el café de la lista llamando a la función y pasándole el nombre del camarero con el que estamos trabajando.
+        \item Esto lo pasa a la clase Cliente y marca el buleano "CafeEntregado" como "true".
+    \end{enumerate}
+\item Función run que se ejecuta en el main con .start() y nos dice que los camareros están listo para atender.
+\item Getters y setters de todos los atributos. 
+\end{itemize}
+
+\subsubsection{Clase Cliente}
+De la clase Cliente no tenemos que realizar ninguna modificación porque no es ni productor ni consumidor en este caso.
+\begin{itemize}
+\item Atributos:
+    \begin{enumerate}
+        \item nombre -> nombre del cliente.
+        \item tiempoEspera -> cantidad de tiempo que está dispuesto a esperar el cliente a ser atentido.
+        \item Lista Camareros -> lista de los camareros para ver cual está ocupado o no.
+        \item cafeEntregado -> buleano que se pone en true al entregar el café
+    \end{enumerate}
+\item Constructor de la clase con los atributos.
+\item Función run que se ejecuta en el main con .start(), que contiene un try catch en el encontramos:
+    \begin{enumerate}
+        \item Los clientes van llegan a la cafetería
+        \item Creamos una variable "ocupado" que inicia siendo "null" porque ninguno de los camareros está ocupado al principio.
+        \item Recorriendo la lista de camareros buscamos un camarero libre y lo marcamos como ocupado. Y si está libre, llamamos la función "prepararCafé()" que se encuentra en la Clase camarero.
+        \item Luego para ver si sigue estando en el tiempo de espera del cliente, busqué como calcular el tiempo desde que se inicia con "currentTimeMillis()" y se lo restamos al tiempo de inicio si es mayor que el tiempo de espera, el cliente se va, sino el cliente ha recibido el café y se ha ido.
+    \end{enumerate}
+\item Getters y setters de todos los atributos. 
+\item La clase Cliente tienen los mismos atributos y la misma estructura que la realizada en el ejercicio de Java anterior, lo nuevo es un atributo HelloController controller que va a pasar los datos que necesitamos de los clientes al HelloController.
+\item Y en vez que imprimirlo con un "sout" lo pasamos por un (controller."funcionParaPasarDatos"), esos datos se pasan y los enseña en los textArea.
+\item Los getters, setters y la función "run()" se mantienen igual.
+\end{itemize}
+
+\subsubsection{Hello View (xml)}
+Todos los elementos visuales con los ides y las acciones vinculadas para que se ejecute todo correctamente en la interfaz.
+\begin{itemize}
+\item Tenemos un AnchorPane que envuelve a todos los elementos y es el que se conecta al controller HelloController.
+\item Hay tres fondos que se paran las pantallas, por un lado la ejecución, por otro los datos de Cliente y Camarero y por último tenemos al barista y a la cola de los cafés para servir y los servidos.
+\item Un TextArea con el fx:id="texto".
+\item El botón empezar que inicializar el simulador.
+\item Dos TextArea que nos enseñan los datos de los clientes y los camareros.
+\item Tenemos una leyenda que nos indica que representa cada icono.
+\item Hay un TextArea que nos enseña como el Barista trabaja y va preparando cafés constantemente.
+\item Y otros dos textAreas que nos enseñan por un lado los cafés para servir y por otro los servidos.
+\item A parte hay un archivo "style.css" que tiene el estilo del botón, los fondos, etc.
+\end{itemize}
+
+
+Aquí vemos un ejemplo del funcionamiento del programa a través de la interfaz.
+
+\begin{center}
+    \includegraphics[height=9cm]{images/interfazbarista.png}
+\end{center}
+
+\end{document}
